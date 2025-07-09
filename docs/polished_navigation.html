@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Navigator - 洗練されたナビゲーション</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #fafafb;
+            height: 100vh;
+            overflow: hidden;
+            color: #1a1a1a;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            width: 280px;
+            background: #ffffff;
+            border-right: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02);
+        }
+
+        .sidebar-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e1e5e9;
+            background: #fafafb;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+
+        /* プロジェクト情報 */
+        .project-info {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e1e5e9;
+            background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%);
+            display: none;
+        }
+
+        .project-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .project-stage {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .project-updated {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .project-progress {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e1e5e9;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e1e5e9;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            width: 75%;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 6px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* ナビゲーション */
+        .nav-section {
+            padding: 8px 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-items {
+            list-style: none;
+            padding: 0 16px;
+        }
+
+        .nav-category {
+            font-size: 11px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 20px 12px 8px;
+            margin-top: 8px;
+        }
+
+        .nav-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-item {
+            margin: 2px 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 12px;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+            transform: translateX(2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+
+        .nav-link.active:hover {
+            transform: translateX(0);
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .nav-text {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .nav-badge {
+            background: #e5e7eb;
+            color: #4b5563;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .nav-link.active .nav-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* パンくずナビゲーション */
+        .breadcrumb-header {
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .breadcrumb-item.current {
+            color: #1f2937;
+            font-weight: 600;
+            background: #f3f4f6;
+        }
+
+        .breadcrumb-icon {
+            font-size: 16px;
+        }
+
+        .breadcrumb-separator {
+            color: #d1d5db;
+            font-size: 14px;
+            margin: 0 4px;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 320px;
+            padding: 10px 16px 10px 44px;
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: #fafafb;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: white;
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            border-color: #6366f1;
+            background: #f8faff;
+            color: #6366f1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+            background: linear-gradient(135deg, #5856eb 0%, #7c3aed 100%);
+        }
+
+        /* コンテンツエリア */
+        .content-area {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            background: #fafafb;
+        }
+
+        /* プロジェクト一覧 */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e1e5e9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            border-color: #6366f1;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .project-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.4;
+            flex: 1;
+            margin-right: 12px;
+        }
+
+        .project-card-stage {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stage-ideation {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .stage-validation {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .stage-development {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .project-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .project-card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-action-btn {
+            padding: 8px 16px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fafafb;
+            color: #4b5563;
+        }
+
+        .card-action-btn:hover {
+            border-color: #6366f1;
+            background: #f8faff;
+            color: #6366f1;
+        }
+
+        /* Lean Canvas */
+        .canvas-container {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5e9;
+        }
+
+        .canvas-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .canvas-subtitle {
+            color: #6b7280;
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 20px;
+            min-height: 600px;
+        }
+
+        .canvas-block {
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            background: #fafafb;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .canvas-block:hover {
+            border-color: #6366f1;
+            background: #f8faff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+        }
+
+        .canvas-block:hover::before {
+            opacity: 1;
+        }
+
+        .canvas-block.completed {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .canvas-block.completed::before {
+            background: #10b981;
+            opacity: 1;
+        }
+
+        .block-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.8px;
+        }
+
+        .block-content {
+            font-size: 14px;
+            color: #1f2937;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .block-placeholder {
+            color: #9ca3af;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        /* Lean Canvas レイアウト */
+        .block-problem { grid-column: 1; grid-row: 1; }
+        .block-solution { grid-column: 2; grid-row: 1; }
+        .block-key-metrics { grid-column: 3; grid-row: 1; }
+        .block-unique-value { grid-column: 4; grid-row: 1; }
+        .block-unfair-advantage { grid-column: 5; grid-row: 1; }
+        .block-channels { grid-column: 1; grid-row: 2; }
+        .block-customer-segments { grid-column: 2; grid-row: 2; }
+        .block-cost-structure { grid-column: 1 / span 2; grid-row: 3; }
+        .block-revenue-streams { grid-column: 3 / span 2; grid-row: 3; }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .search-input {
+                width: 240px;
+            }
+
+            .canvas-grid {
+                grid-template-columns: repeat(2, 1fr);
+                min-height: auto;
+            }
+
+            .block-cost-structure,
+            .block-revenue-streams {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                height: 100vh;
+                z-index: 1001;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .breadcrumb-header {
+                padding: 0 16px;
+                height: 64px;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+
+            .canvas-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+        }
+
+        /* アニメーション */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-card {
+            animation: slideIn 0.6s ease forwards;
+        }
+
+        .project-card:nth-child(2) { animation-delay: 0.1s; }
+        .project-card:nth-child(3) { animation-delay: 0.2s; }
+        .project-card:nth-child(4) { animation-delay: 0.3s; }
+        .project-card:nth-child(5) { animation-delay: 0.4s; }
+        .project-card:nth-child(6) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- サイドバー -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">IN</div>
+                    <div class="logo-text">Innovation Navigator</div>
+                </div>
+            </div>
+
+            <!-- プロジェクト情報（プロジェクト内でのみ表示） -->
+            <div class="project-info" id="projectInfo">
+                <h2 class="project-title">中小企業向けスマート在庫管理システム</h2>
+                <div class="project-meta">
+                    <div class="project-stage">検証中</div>
+                    <div class="project-updated">更新: 7/4</div>
+                </div>
+                <div class="project-progress">
+                    <div class="progress-label">全体進捗</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">75% 完了</div>
+                </div>
+            </div>
+
+            <!-- ナビゲーション -->
+            <div class="nav-section">
+                <ul class="nav-items" id="navItems">
+                    <!-- グローバルナビゲーション（初期状態） -->
+                    <li class="nav-item">
+                        <div class="nav-category">メイン</div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('dashboard')">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">ダッシュボード</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" onclick="navigateTo('idea-studio')">
+                            <span class="nav-icon">💡</span>
+                            <span class="nav-text">アイデアスタジオ</span>
+                            <span class="nav-badge">8</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('stage-gate-management')">
+                            <span class="nav-icon">⭐</span>
+                            <span class="nav-text">ステージゲート管理</span>
+                            <span class="nav-badge">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('start-mode')">
+                            <span class="nav-icon">🚀</span>
+                            <span class="nav-text">新規アイデア創出</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <div class="nav-category">分析・調査</div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('assets')">
+                            <span class="nav-icon">🏢</span>
+                            <span class="nav-text">自社アセット</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('environment')">
+                            <span class="nav-icon">🌍</span>
+                            <span class="nav-text">外部環境</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('problems')">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-text">課題・欲望ボード</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <div class="nav-category">ツール・学習</div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('interview')">
+                            <span class="nav-icon">🎤</span>
+                            <span class="nav-text">インタビューガイド</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('training')">
+                            <span class="nav-icon">📚</span>
+                            <span class="nav-text">事業創造トレーニング</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('morphy')">
+                            <span class="nav-icon">🏆</span>
+                            <span class="nav-text">MORPHY検定</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="navigateTo('templates')">
+                            <span class="nav-icon">📋</span>
+                            <span class="nav-text">テンプレート</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <div class="main-content">
+            <!-- パンくずナビゲーション -->
+            <header class="breadcrumb-header">
+                <nav class="breadcrumb" id="breadcrumb">
+                    <a href="#" class="breadcrumb-item" onclick="navigateTo('dashboard')">
+                        <span class="breadcrumb-icon">🏠</span>
+                        <span>ホーム</span>
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item current">
+                        <span class="breadcrumb-icon">💡</span>
+                        <span>アイデアスタジオ</span>
+                    </span>
+                </nav>
+
+                <div class="header-actions">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="プロジェクトや課題を検索...">
+                    </div>
+                    <button class="action-btn">
+                        <span>📊</span>
+                        フィルター
+                    </button>
+                    <button class="action-btn primary">
+                        <span>➕</span>
+                        新規プロジェクト
+                    </button>
+                </div>
+            </header>
+
+            <!-- コンテンツエリア -->
+            <main class="content-area" id="contentArea">
+                <!-- プロジェクト一覧（初期状態） -->
+                <div id="projectList">
+                    <h1 style="font-size: 32px; font-weight: 700; color: #1f2937; margin-bottom: 8px; letter-spacing: -0.02em;">アイデアスタジオ</h1>
+                    <p style="color: #6b7280; margin-bottom: 32px; font-size: 16px; font-weight: 500;">現在進行中の8つのプロジェクトを管理します。各プロジェクトをクリックして詳細に移動できます。</p>
+
+                    <div class="project-grid">
+                        <div class="project-card" onclick="enterProject('smart-inventory')">
+                            <div class="project-card-header">
+                                <div class="project-card-title">中小企業向けスマート在庫管理システム</div>
+                                <div class="project-card-stage stage-validation">検証中</div>
+                            </div>
+
+                        <div class="project-card" onclick="enterProject('ai-quality')">
+                            <div class="project-card-header">
+                                <div class="project-card-title">AI品質検査システム</div>
+                                <div class="project-card-stage stage-development">開発中</div>
+                            </div>
+                            <div class="project-card-meta">
+                                <div>最終更新: 2025/07/02</div>
+                                <div>検証進捗: 90%</div>
+                            </div>
+                            <div class="project-card-actions">
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('canvas')">Canvas</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('validation')">検証</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('gate')">ゲート</button>
+                            </div>
+                        </div>
+
+                        <div class="project-card" onclick="enterProject('energy-optimization')">
+                            <div class="project-card-header">
+                                <div class="project-card-title">エネルギー効率最適化プラットフォーム</div>
+                                <div class="project-card-stage stage-ideation">アイデア段階</div>
+                            </div>
+                            <div class="project-card-meta">
+                                <div>最終更新: 2025/06/28</div>
+                                <div>検証進捗: 25%</div>
+                            </div>
+                            <div class="project-card-actions">
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('canvas')">Canvas</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('validation')">検証</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('gate')">ゲート</button>
+                            </div>
+                        </div>
+
+                        <div class="project-card" onclick="enterProject('predictive-maintenance')">
+                            <div class="project-card-header">
+                                <div class="project-card-title">AIプレディクティブメンテナンス</div>
+                                <div class="project-card-stage stage-validation">検証中</div>
+                            </div>
+                            <div class="project-card-meta">
+                                <div>最終更新: 2025/06/30</div>
+                                <div>検証進捗: 60%</div>
+                            </div>
+                            <div class="project-card-actions">
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('canvas')">Canvas</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('validation')">検証</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('gate')">ゲート</button>
+                            </div>
+                        </div>
+
+                        <div class="project-card" onclick="enterProject('ar-support')">
+                            <div class="project-card-header">
+                                <div class="project-card-title">AR技術を活用したリモート技術サポート</div>
+                                <div class="project-card-stage stage-ideation">アイデア段階</div>
+                            </div>
+                            <div class="project-card-meta">
+                                <div>最終更新: 2025/06/25</div>
+                                <div>検証進捗: 15%</div>
+                            </div>
+                            <div class="project-card-actions">
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('canvas')">Canvas</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('validation')">検証</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('gate')">ゲート</button>
+                            </div>
+                        </div>
+
+                        <div class="project-card" onclick="enterProject('supply-chain')">
+                            <div class="project-card-header">
+                                <div class="project-card-title">サプライチェーン可視化ダッシュボード</div>
+                                <div class="project-card-stage stage-ideation">アイデア段階</div>
+                            </div>
+                            <div class="project-card-meta">
+                                <div>最終更新: 2025/06/20</div>
+                                <div>検証進捗: 30%</div>
+                            </div>
+                            <div class="project-card-actions">
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('canvas')">Canvas</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('validation')">検証</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('gate')">ゲート</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lean Canvas（プロジェクト内で表示） -->
+                <div id="canvasView" style="display: none;">
+                    <div class="canvas-container">
+                        <h1 class="canvas-title">中小企業向けスマート在庫管理システム</h1>
+                        <p class="canvas-subtitle">Lean Canvas - 最終更新: 2025年7月4日</p>
+
+                        <div class="canvas-grid">
+                            <div class="canvas-block block-problem completed">
+                                <div class="block-title">Problem</div>
+                                <div class="block-content">
+                                    • 手作業による在庫管理でミスが多発<br>
+                                    • Excelでの管理は限界、リアルタイム性なし<br>
+                                    • 過剰在庫と欠品の両方が発生
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-solution completed">
+                                <div class="block-title">Solution</div>
+                                <div class="block-content">
+                                    • バーコードスキャンによる簡単入出庫<br>
+                                    • AI需要予測で発注タイミング自動提案<br>
+                                    • 直感的なダッシュボード
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-key-metrics">
+                                <div class="block-title">Key Metrics</div>
+                                <div class="block-content">
+                                    <div class="block-placeholder">AIと共著で指標を決めましょう</div>
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-unique-value completed">
+                                <div class="block-title">Unique Value Proposition</div>
+                                <div class="block-content">
+                                    中小企業でも「大企業並みの在庫最適化」を月額3万円から実現
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-unfair-advantage">
+                                <div class="block-title">Unfair Advantage</div>
+                                <div class="block-content">
+                                    <div class="block-placeholder">独自性を明確にしましょう</div>
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-channels">
+                                <div class="block-title">Channels</div>
+                                <div class="block-content">
+                                    <div class="block-placeholder">顧客へのリーチ方法を検討</div>
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-customer-segments completed">
+                                <div class="block-title">Customer Segments</div>
+                                <div class="block-content">
+                                    • 従業員10-100名の製造業<br>
+                                    • 在庫管理担当者<br>
+                                    • ITリテラシー中程度
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-cost-structure">
+                                <div class="block-title">Cost Structure</div>
+                                <div class="block-content">
+                                    <div class="block-placeholder">コスト構造を整理しましょう</div>
+                                </div>
+                            </div>
+
+                            <div class="canvas-block block-revenue-streams">
+                                <div class="block-title">Revenue Streams</div>
+                                <div class="block-content">
+                                    <div class="block-placeholder">収益モデルを定義しましょう</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        let currentView = 'global'; // 'global' or 'project'
+        let currentProject = null;
+
+        // プロジェクトに入る
+        function enterProject(projectId) {
+            currentView = 'project';
+            currentProject = projectId;
+            
+            // プロジェクト情報を取得
+            const projects = {
+                'smart-inventory': {
+                    title: '中小企業向けスマート在庫管理システム',
+                    stage: '検証中',
+                    progress: 75,
+                    icon: '📦'
+                },
+                'ai-quality': {
+                    title: 'AI品質検査システム',
+                    stage: '開発中',
+                    progress: 90,
+                    icon: '🔍'
+                },
+                'energy-optimization': {
+                    title: 'エネルギー効率最適化プラットフォーム',
+                    stage: 'アイデア段階',
+                    progress: 25,
+                    icon: '⚡'
+                }
+            };
+
+            const project = projects[projectId] || projects['smart-inventory'];
+
+            // サイドバーをプロジェクト専用に変更
+            updateSidebarForProject(project);
+            
+            // パンくずリストを更新
+            updateBreadcrumb('project', project);
+            
+            // メインコンテンツをLean Canvasに変更
+            showCanvasView();
+            
+            // ヘッダーアクションを更新
+            updateHeaderActions('project');
+        }
+
+        // サイドバーをプロジェクト専用に更新
+        function updateSidebarForProject(project) {
+            // プロジェクト情報を表示
+            const projectInfo = document.getElementById('projectInfo');
+            projectInfo.style.display = 'block';
+            projectInfo.querySelector('.project-title').textContent = project.title;
+            projectInfo.querySelector('.project-stage').textContent = project.stage;
+            projectInfo.querySelector('.progress-fill').style.width = project.progress + '%';
+            projectInfo.querySelector('.progress-text').textContent = project.progress + '% 完了';
+
+            // ナビゲーションをプロジェクト専用に変更
+            const navItems = document.getElementById('navItems');
+            navItems.innerHTML = `
+                <li class="nav-item">
+                    <div class="nav-category">プロジェクト機能</div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="switchProjectView('canvas')">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">リーンキャンバス</span>
+                        <span class="nav-badge">6/9</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="switchProjectView('validation')">
+                        <span class="nav-icon">🔬</span>
+                        <span class="nav-text">検証トラッカー</span>
+                        <span class="nav-badge">15</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="switchProjectView('stage-gate')">
+                        <span class="nav-icon">⭐</span>
+                        <span class="nav-text">ステージゲート</span>
+                        <span class="nav-badge">3/5</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="switchProjectView('overview')">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">プロジェクト統計</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <div class="nav-category">クイックアクション</div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="quickProjectAction('hypothesis')">
+                        <span class="nav-icon">💡</span>
+                        <span class="nav-text">仮説を追加</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="quickProjectAction('interview')">
+                        <span class="nav-icon">🎤</span>
+                        <span class="nav-text">インタビュー予約</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="quickProjectAction('prototype')">
+                        <span class="nav-icon">🛠️</span>
+                        <span class="nav-text">プロトタイプ作成</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="quickProjectAction('metrics')">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-text">指標設定</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <div class="nav-category">プロジェクト管理</div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="quickProjectAction('share')">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">チーム共有</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="quickProjectAction('export')">
+                        <span class="nav-icon">📤</span>
+                        <span class="nav-text">レポート出力</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="quickProjectAction('settings')">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">プロジェクト設定</span>
+                    </a>
+                </li>
+            `;
+        }
+
+        // パンくずリストを更新
+        function updateBreadcrumb(view, project = null) {
+            const breadcrumb = document.getElementById('breadcrumb');
+            
+            if (view === 'project' && project) {
+                breadcrumb.innerHTML = `
+                    <a href="#" class="breadcrumb-item" onclick="navigateTo('dashboard')">
+                        <span class="breadcrumb-icon">🏠</span>
+                        <span>ホーム</span>
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="#" class="breadcrumb-item" onclick="backToStudio()">
+                        <span class="breadcrumb-icon">💡</span>
+                        <span>アイデアスタジオ</span>
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="#" class="breadcrumb-item" onclick="switchProjectView('overview')">
+                        <span class="breadcrumb-icon">${project.icon}</span>
+                        <span>${project.title}</span>
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item current">
+                        <span class="breadcrumb-icon">📋</span>
+                        <span>リーンキャンバス</span>
+                    </span>
+                `;
+            } else {
+                breadcrumb.innerHTML = `
+                    <a href="#" class="breadcrumb-item" onclick="navigateTo('dashboard')">
+                        <span class="breadcrumb-icon">🏠</span>
+                        <span>ホーム</span>
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item current">
+                        <span class="breadcrumb-icon">💡</span>
+                        <span>アイデアスタジオ</span>
+                    </span>
+                `;
+            }
+        }
+
+        // ヘッダーアクションを更新
+        function updateHeaderActions(view) {
+            const headerActions = document.querySelector('.header-actions');
+            
+            if (view === 'project') {
+                headerActions.innerHTML = `
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="Canvas内を検索...">
+                    </div>
+                    <button class="action-btn" onclick="saveCanvas()">
+                        <span>💾</span>
+                        保存
+                    </button>
+                    <button class="action-btn" onclick="exportCanvas()">
+                        <span>📤</span>
+                        エクスポート
+                    </button>
+                    <button class="action-btn primary" onclick="nextStepAction()">
+                        <span>⚡</span>
+                        次のステップ
+                    </button>
+                `;
+            } else {
+                headerActions.innerHTML = `
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="プロジェクトや課題を検索...">
+                    </div>
+                    <button class="action-btn">
+                        <span>📊</span>
+                        フィルター
+                    </button>
+                    <button class="action-btn primary">
+                        <span>➕</span>
+                        新規プロジェクト
+                    </button>
+                `;
+            }
+        }
+
+        // Canvas表示
+        function showCanvasView() {
+            document.getElementById('projectList').style.display = 'none';
+            document.getElementById('canvasView').style.display = 'block';
+        }
+
+        // プロジェクト一覧に戻る
+        function backToStudio() {
+            currentView = 'global';
+            currentProject = null;
+            
+            // サイドバーをグローバルに戻す
+            resetSidebarToGlobal();
+            
+            // パンくずリストを更新
+            updateBreadcrumb('global');
+            
+            // メインコンテンツをプロジェクト一覧に戻す
+            document.getElementById('canvasView').style.display = 'none';
+            document.getElementById('projectList').style.display = 'block';
+            
+            // ヘッダーアクションを更新
+            updateHeaderActions('global');
+        }
+
+        // サイドバーをグローバルに戻す
+        function resetSidebarToGlobal() {
+            // プロジェクト情報を非表示
+            document.getElementById('projectInfo').style.display = 'none';
+            
+            // ナビゲーションをグローバルに戻す - 元のHTMLを復元
+            const navItems = document.getElementById('navItems');
+            navItems.innerHTML = `
+                <li class="nav-item">
+                    <div class="nav-category">メイン</div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('dashboard')">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">ダッシュボード</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="navigateTo('idea-studio')">
+                        <span class="nav-icon">💡</span>
+                        <span class="nav-text">アイデアスタジオ</span>
+                        <span class="nav-badge">8</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('stage-gate-management')">
+                        <span class="nav-icon">⭐</span>
+                        <span class="nav-text">ステージゲート管理</span>
+                        <span class="nav-badge">3</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('start-mode')">
+                        <span class="nav-icon">🚀</span>
+                        <span class="nav-text">新規アイデア創出</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <div class="nav-category">分析・調査</div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('assets')">
+                        <span class="nav-icon">🏢</span>
+                        <span class="nav-text">自社アセット</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('environment')">
+                        <span class="nav-icon">🌍</span>
+                        <span class="nav-text">外部環境</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('problems')">
+                        <span class="nav-icon">🎯</span>
+                        <span class="nav-text">課題・欲望ボード</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <div class="nav-category">ツール・学習</div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('interview')">
+                        <span class="nav-icon">🎤</span>
+                        <span class="nav-text">インタビューガイド</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('training')">
+                        <span class="nav-icon">📚</span>
+                        <span class="nav-text">事業創造トレーニング</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('morphy')">
+                        <span class="nav-icon">🏆</span>
+                        <span class="nav-text">MORPHY検定</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="navigateTo('templates')">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">テンプレート</span>
+                    </a>
+                </li>
+            `;
+        }
+
+        // プロジェクトビューの切り替え
+        function switchProjectView(view) {
+            // アクティブ状態の更新
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.closest('.nav-link').classList.add('active');
+
+            const views = {
+                'canvas': { title: 'リーンキャンバス', icon: '📋' },
+                'validation': { title: '検証トラッカー', icon: '🔬' },
+                'stage-gate': { title: 'ステージゲート', icon: '⭐' },
+                'overview': { title: 'プロジェクト統計', icon: '📊' }
+            };
+
+            const viewInfo = views[view];
+            if (viewInfo) {
+                // パンくずリストの最後を更新
+                const currentBreadcrumb = document.querySelector('.breadcrumb-item.current');
+                currentBreadcrumb.innerHTML = `
+                    <span class="breadcrumb-icon">${viewInfo.icon}</span>
+                    <span>${viewInfo.title}</span>
+                `;
+            }
+
+            console.log(`Switched to project view: ${view}`);
+            
+            if (view !== 'canvas') {
+                alert(`${viewInfo.title}画面に切り替えました`);
+            }
+        }
+
+        // その他の関数群
+        function quickAction(action) {
+            const actions = {
+                'canvas': 'リーンキャンバス画面を開く',
+                'validation': '検証トラッカー画面を開く',
+                'gate': 'ステージゲート画面を開く'
+            };
+            
+            alert(`${actions[action]}\n\n実際のアプリでは対応する画面に遷移します。`);
+        }
+
+        function quickProjectAction(action) {
+            const actions = {
+                'hypothesis': '新しい仮説を追加',
+                'interview': 'ユーザーインタビューを予約',
+                'prototype': 'プロトタイプ作成ツールを起動',
+                'metrics': '成功指標の設定',
+                'share': 'チームメンバーと共有',
+                'export': 'レポートをエクスポート',
+                'settings': 'プロジェクト設定を開く'
+            };
+
+            alert(`${actions[action]}\n\n実際のアプリでは対応する機能が起動します。`);
+        }
+
+        function saveCanvas() {
+            alert('✅ Lean Canvasを保存しました');
+        }
+
+        function exportCanvas() {
+            alert('📤 Lean CanvasをPDF形式でエクスポートします');
+        }
+
+        function nextStepAction() {
+            alert('⚡ 次のステップ推奨:\n\n未完成ブロック（Key Metrics、Channels等）の完成をお勧めします');
+        }
+
+        function navigateTo(page) {
+            if (currentView === 'project') {
+                backToStudio();
+            }
+            
+            // アクティブ状態の更新
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (event.target.closest('.nav-link')) {
+                event.target.closest('.nav-link').classList.add('active');
+            }
+
+            console.log(`Navigated to: ${page}`);
+            
+            if (page !== 'idea-studio') {
+                alert(`${page}画面に遷移します`);
+            }
+        }
+
+        // Canvas ブロックのクリック処理
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.canvas-block').forEach(block => {
+                block.addEventListener('click', function() {
+                    const blockTitle = this.querySelector('.block-title').textContent;
+                    alert(`「${blockTitle}」ブロックを編集\n\n実際のアプリでは編集モーダルが表示されます。`);
+                });
+            });
+
+            // 検索機能
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('search-input')) {
+                    const query = e.target.value;
+                    if (query.length > 2) {
+                        console.log(`Searching for: ${query}`);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+                            <div class="project-card-meta">
+                                <div>最終更新: 2025/07/03</div>
+                                <div>検証進捗: 75%</div>
+                            </div>
+                            <div class="project-card-actions">
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('canvas')">Canvas</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('validation')">検証</button>
+                                <button class="card-action-btn" onclick="event.stopPropagation(); quickAction('gate')">ゲート</button>
+                            </div>
+                        
