@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import MuiSidebar from "@/components/layout/MuiSidebar";
+import HomeIcon from '@mui/icons-material/Home';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import type { BreadcrumbItem } from '@/components/Breadcrumbs';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,12 +26,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 仮：ダッシュボード用パンくず
+  const breadcrumbs: BreadcrumbItem[] = [
+    { icon: <HomeIcon fontSize="small" />, label: 'ホーム', href: '/' },
+    { icon: <DashboardIcon fontSize="small" />, label: 'ダッシュボード', active: true },
+  ];
   return (
-    <html lang="en">
+    <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
-        {children}
+        <MuiSidebar breadcrumbs={breadcrumbs}>{children}</MuiSidebar>
       </body>
     </html>
   );
