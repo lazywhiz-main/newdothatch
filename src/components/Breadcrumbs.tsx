@@ -1,7 +1,13 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { usePathname, useParams } from 'next/navigation';
+import HomeIcon from '@mui/icons-material/Home';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 export type BreadcrumbItem = {
   icon?: React.ReactNode; // アイコン（MUIアイコンやemoji）
@@ -57,5 +63,40 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className }) => {
     </nav>
   );
 };
+
+const PROJECT_PAGE_LABELS: Record<string, string> = {
+  'canvas': 'リーンキャンバス',
+  'validation': '検証トラッカー',
+  'stage-gate': 'ステージゲート',
+  'stats': 'プロジェクト統計',
+  'hypothesis': '仮説を追加',
+  'interview': 'インタビュー予約',
+  'prototype': 'プロトタイプ作成',
+  'metrics': '指標設定',
+  'share': 'チーム共有',
+  'export': 'レポート出力',
+  'settings': 'プロジェクト設定',
+};
+
+export function ProjectBreadcrumbs() {
+  const pathname = usePathname();
+  const params = useParams();
+  const projectId = params?.projectId ? decodeURIComponent(params.projectId as string) : 'プロジェクト';
+  const pathParts = pathname.split('/').filter(Boolean);
+  // /projects/[projectId]/[subPage] の場合
+  const isProjectRoot = pathParts.length === 2; // ['projects', 'projectId']
+  const subPage = pathParts.length > 2 ? pathParts[2] : undefined; // ['projects', 'projectId', 'subPage']
+  const breadcrumbs = [
+    { icon: <HomeIcon fontSize="small" />, label: 'ホーム', href: '/' },
+    { icon: <LightbulbIcon fontSize="small" />, label: 'アイデアスタジオ', href: '/idea-studio' },
+    { icon: <DashboardIcon fontSize="small" />, label: projectId, href: `/projects/${encodeURIComponent(projectId)}` },
+  ];
+  if (subPage && PROJECT_PAGE_LABELS[subPage]) {
+    breadcrumbs.push({ label: PROJECT_PAGE_LABELS[subPage], icon: <span />, href: `/projects/${encodeURIComponent(projectId)}/${subPage}` });
+  } else {
+    breadcrumbs.push({ label: 'プロジェクトホーム', icon: <span />, href: `/projects/${encodeURIComponent(projectId)}` });
+  }
+  return <Breadcrumbs items={breadcrumbs} />;
+}
 
 export default Breadcrumbs; 

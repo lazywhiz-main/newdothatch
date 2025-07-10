@@ -33,7 +33,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumbs';
+import Breadcrumbs, { BreadcrumbItem, ProjectBreadcrumbs } from '@/components/Breadcrumbs';
 
 const drawerWidth = 260;
 
@@ -178,7 +178,7 @@ export default function MuiSidebar({ children, breadcrumbs, projectNav = false, 
     </div>
   );
 
-  // AppBarのパンくずは常に表示（breadcrumbsがあれば）
+  // AppBarのパンくずは常に表示（ProjectBreadcrumbsで動的生成）
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -199,7 +199,7 @@ export default function MuiSidebar({ children, breadcrumbs, projectNav = false, 
         <Toolbar sx={{ minHeight: 48, display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2 }}>
           {/* 左側：パンくず（sm未満は非表示） */}
           <Box sx={{ flex: 1, display: { xs: 'none', sm: 'block' } }}>
-            {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+            <ProjectBreadcrumbs />
           </Box>
           {/* 右側：通知・設定・ヘルプ・プロフィール */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
